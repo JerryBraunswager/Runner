@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -27,7 +23,7 @@ public class Actor : MonoBehaviour
         _playerGlow.gameObject.SetActive(false);
     }
 
-    private void Update () 
+    private void Update()
     {
         transform.Translate(new Vector3(0, _speed * Time.deltaTime, 0));
     }

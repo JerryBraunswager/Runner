@@ -1,10 +1,10 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.VisualScripting.Metadata;
 
 public class Map : MonoBehaviour
 {
+    [SerializeField] private ScoreView _score;
     [SerializeField] private float _speed;
     [SerializeField] private GameObject _checkPoint;
     [SerializeField] private GameObject _straightRoad;
@@ -20,6 +20,9 @@ public class Map : MonoBehaviour
     private List<Road> _straightRoads = new List<Road>();
     private List<Road> _curveRoads = new List<Road>();
 
+    public event Action ScoreReset;
+    public event Action<int> ScoreAdded;
+
     private void Start()
     {
         InstantiateRoads();
@@ -31,6 +34,11 @@ public class Map : MonoBehaviour
         SpawnRoad();
         CheckAlive(_straightRoads);
         CheckAlive(_curveRoads);
+    }
+
+    public void StartNewGame()
+    {
+        ScoreReset?.Invoke();
     }
 
     public void CurveRoadIndexChoose()
@@ -56,6 +64,7 @@ public class Map : MonoBehaviour
         if(isSpawn) 
         {
             ActivateRoad(_roadIndex);
+            ScoreAdded?.Invoke(1);
         }
     }
 

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
@@ -22,13 +20,14 @@ public class PlayerController : MonoBehaviour
 
     public event UnityAction<float, float> AbilityChargeChanged;
     public event UnityAction<bool> AliveChanged;
+    public event Action ScoreSaved;
 
     private void OnEnable()
     {
-        _chooseTrigger.PlayerChoosed += PlayerInit;
+        InitNewGame();
     }
 
-    void Start()
+    private void Start()
     {
         _abilityChargeSpeed = 1 / _abilityChargeTime;
     }
@@ -40,9 +39,17 @@ public class PlayerController : MonoBehaviour
             transform.position = _playerPrefab.transform.position;
         }
 
-        _abilityChargeValue += _abilityChargeSpeed * Time.deltaTime;
-        _abilityChargeValue = Mathf.Clamp(_abilityChargeValue, 0, 1);
-        AbilityChargeChanged?.Invoke(_abilityChargeValue, 1);
+        if (gameObject.activeSelf)
+        {
+            _abilityChargeValue += _abilityChargeSpeed * Time.deltaTime;
+            _abilityChargeValue = Mathf.Clamp(_abilityChargeValue, 0, 1);
+            AbilityChargeChanged?.Invoke(_abilityChargeValue, 1);
+        }
+    }
+
+    public void InitNewGame()
+    {
+        _chooseTrigger.PlayerChoosed += PlayerInit;
     }
 
     private void PlayerInit(Actor actor)
@@ -50,7 +57,7 @@ public class PlayerController : MonoBehaviour
         _playerPrefab = actor;
         _playerPrefab.OnControll(_speed);
         _isActive = true;
-        AliveChanged.Invoke(_isActive);
+        AliveChanged?.Invoke(_isActive);
         _chooseTrigger.PlayerChoosed -= PlayerInit;
     }
 
@@ -58,14 +65,33 @@ public class PlayerController : MonoBehaviour
     {
         _isActive = false;
         _playerPrefab.OnControll(0);
-        AliveChanged.Invoke(_isActive);
+        //_playerPrefab = null;
+        AliveChanged?.Invoke(_isActive);
+        ScoreSaved?.Invoke();
+    }
+
+    public void Resurrect()
+    {
+        _isActive = true;
+        _playerPrefab.OnControll(_speed);
+        AliveChanged?.Invoke(_isActive);
     }
 
     public void OnClick(InputAction.CallbackContext context)
     {
+        if(_playerPrefab == null) 
+        {
+            return;
+        }
+
         if (_abilityChargeValue == 1)
         {
             RaycastHit2D raycast = Physics2D.GetRayIntersection(_mouseScreen);
+
+            if(raycast.transform == null || raycast.transform.position.y < transform.position.y) 
+            {
+                return;
+            }
 
             if (raycast.collider != null && raycast.collider != _playerPrefab)
             {

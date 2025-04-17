@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     private WaitForSeconds _sleepTime;
     private int _downSpawnPointsIndexStart = 4;
 
-    private void Start()
+    private void OnEnable()
     {
         _sleepTime = new WaitForSeconds(_waitTime);
         SpawnActor(_downSpawnPointsIndexStart, _spawnPoints.Count);
@@ -45,10 +45,10 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnCoroutine()
     {
-        while(true) 
+        while(gameObject.activeSelf) 
         {
             yield return _sleepTime;
-            SpawnActor(0, _spawnPoints.Count);
+            SpawnActor(0, _spawnPoints.Count - _downSpawnPointsIndexStart);
         }
     }
 }
