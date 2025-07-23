@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _spawnPoints;
-    [SerializeField] private List<GameObject> _prefabs;
+    [SerializeField] private List<Actor> _prefabs;
     [SerializeField] private GameObject _actorStorage;
     [SerializeField] private float _speed;
     [SerializeField] private float _waitTime;
@@ -13,14 +13,19 @@ public class Spawner : MonoBehaviour
     private WaitForSeconds _sleepTime;
     private int _downSpawnPointsIndexStart = 4;
 
-    private void OnEnable()
+    public void Enable()
     {
         _sleepTime = new WaitForSeconds(_waitTime);
         SpawnActor(_downSpawnPointsIndexStart, _spawnPoints.Count);
         StartCoroutine(SpawnCoroutine());
     }
 
-    private GameObject ChooseActor()
+    public void AddCharacterInPrefabs(Actor character)
+    {
+        _prefabs.Add(character);
+    }
+
+    private Actor ChooseActor()
     {
         int index = Random.Range(0, _prefabs.Count);
         return _prefabs[index];

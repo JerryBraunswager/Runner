@@ -1,5 +1,5 @@
 {
-    "idSave": 3,
+    "idSave": 5,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
@@ -10,5 +10,18 @@
         true,
         false
     ],
-    "Highscore": 10
+    "Highscore": 0,
+    "Score": 0,
+    "BuyedCharacters": [
+        true,
+        false,
+        false,
+        false
+    ],
+    "Price": [
+        25,
+        35,
+        55,
+        70
+    ]
 }

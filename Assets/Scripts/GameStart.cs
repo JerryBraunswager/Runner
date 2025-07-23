@@ -41,7 +41,7 @@ public class GameStart : MonoBehaviour
         if (_firstStart == true)
         {
             _menu.gameObject.SetActive(false);
-            _spawner.gameObject.SetActive(true);
+            _spawner.Enable();
             _playerController.gameObject.SetActive(true);
             _playerController.AliveChanged += ShowDeadScreen;
             _firstStart = false;

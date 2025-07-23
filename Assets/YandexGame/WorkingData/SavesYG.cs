@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace YG
 {
     [System.Serializable]
@@ -19,6 +21,9 @@ namespace YG
         // Ваши сохранения
 
         public int Highscore;
+        public int Score;
+        public List<bool> BuyedCharacters = new List<bool>();
+        public List<int> Price = new List<int>();
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
 
